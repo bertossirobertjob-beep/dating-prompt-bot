@@ -9,12 +9,14 @@ import { useToast } from '@/components/ui/use-toast';
 interface ImageUploadProps {
   onImagesUploaded: (imageUrls: string[]) => void;
   maxImages?: number;
+  images?: string[];
 }
 
-const ImageUpload: React.FC<ImageUploadProps> = ({ onImagesUploaded, maxImages = 10 }) => {
+const ImageUpload: React.FC<ImageUploadProps> = ({ onImagesUploaded, maxImages = 10, images = [] }) => {
   const [uploading, setUploading] = useState(false);
-  const [uploadedImages, setUploadedImages] = useState<string[]>([]);
   const { toast } = useToast();
+
+  const uploadedImages = images;
 
   const handleFileUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
     const files = event.target.files;
@@ -67,7 +69,6 @@ const ImageUpload: React.FC<ImageUploadProps> = ({ onImagesUploaded, maxImages =
       }
 
       const updatedImages = [...uploadedImages, ...newImageUrls];
-      setUploadedImages(updatedImages);
       onImagesUploaded(updatedImages);
 
       toast({
@@ -88,7 +89,6 @@ const ImageUpload: React.FC<ImageUploadProps> = ({ onImagesUploaded, maxImages =
 
   const removeImage = (indexToRemove: number) => {
     const updatedImages = uploadedImages.filter((_, index) => index !== indexToRemove);
-    setUploadedImages(updatedImages);
     onImagesUploaded(updatedImages);
   };
 

@@ -302,6 +302,7 @@ const Chat = () => {
               <ImageUpload
                 onImagesUploaded={setUploadedImages}
                 maxImages={10}
+                images={uploadedImages}
               />
               
               {uploadedImages.length > 0 && <Separator className="my-4" />}
