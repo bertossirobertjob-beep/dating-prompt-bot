@@ -15,12 +15,12 @@ const HeroSection = () => {
             <div className="space-y-6 fade-in-up">
               <h1 className="text-5xl md:text-6xl lg:text-7xl font-bold leading-tight">
                 Trasforma i tuoi{" "}
-                <span className="gradient-text">match</span> in{" "}
-                <span className="gradient-text">appuntamenti reali</span>
+                <span className="text-primary">match</span> in{" "}
+                <span className="text-primary">appuntamenti reali</span>
               </h1>
               
               <p className="text-xl md:text-2xl text-muted-foreground max-w-2xl">
-                AI che analizza profili e conversazioni per generare frasi d'apertura irresistibili
+                La nuova intelligenza artificiale che ti dice esattamente cosa scrivere per ottenere appuntamenti garantiti
               </p>
             </div>
             
