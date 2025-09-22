@@ -1,7 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { Play } from "lucide-react";
 import { useNavigate } from "react-router-dom";
-import heroMockup from "@/assets/hero-chat-mockup.jpg";
+import ChatAnimation from "@/components/ChatAnimation";
 
 const HeroSection = () => {
   const navigate = useNavigate();
@@ -11,7 +11,7 @@ const HeroSection = () => {
   };
 
   return (
-    <section className="relative min-h-screen flex items-center justify-center px-4 py-20">
+    <section className="relative min-h-screen flex items-center justify-center px-4 py-20 pt-32">
       {/* Background gradient overlay */}
       <div className="absolute inset-0 hero-gradient opacity-90"></div>
       
@@ -54,25 +54,10 @@ const HeroSection = () => {
             </div>
           </div>
           
-          {/* Right side - Chat mockup */}
+          {/* Right side - Chat Animation */}
           <div className="flex justify-center lg:justify-end fade-in-up-delayed">
             <div className="relative">
-              <div className="glass-card p-8 max-w-md w-full">
-                <img 
-                  src={heroMockup} 
-                  alt="Chat mockup showing AI-generated opening message"
-                  className="w-full h-auto rounded-xl shadow-2xl"
-                />
-                
-                {/* Floating elements */}
-                <div className="absolute -top-4 -right-4 glass-card p-3 animate-pulse">
-                  <div className="w-3 h-3 bg-green-500 rounded-full"></div>
-                </div>
-                
-                <div className="absolute -bottom-4 -left-4 glass-card p-2">
-                  <span className="text-xs font-semibold gradient-text">AI Generated ✨</span>
-                </div>
-              </div>
+              <ChatAnimation />
             </div>
           </div>
         </div>
