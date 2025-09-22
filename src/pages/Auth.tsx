@@ -25,9 +25,9 @@ const Auth = () => {
         setSession(session);
         setUser(session?.user ?? null);
         
-        // Redirect authenticated users to main page
+        // Redirect authenticated users to dashboard
         if (session?.user) {
-          navigate("/");
+          navigate("/dashboard");
         }
       }
     );
@@ -38,7 +38,7 @@ const Auth = () => {
       setUser(session?.user ?? null);
       
       if (session?.user) {
-        navigate("/");
+        navigate("/dashboard");
       }
     });
 
