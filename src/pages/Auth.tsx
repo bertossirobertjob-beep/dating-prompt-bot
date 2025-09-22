@@ -60,12 +60,20 @@ const Auth = () => {
         description: error.message,
         variant: "destructive",
       });
-    } else {
+    } else if (data.user) {
+      // Se l'utente è stato creato, significa che è già autenticato
       toast({
         title: "Registrazione completata!",
         description: "Benvenuto nella piattaforma",
       });
-      // L'utente sarà automaticamente autenticato e reindirizzato
+      
+      // Il redirect avverrà automaticamente tramite onAuthStateChange
+      // Ma aggiungiamo un timeout di sicurezza
+      setTimeout(() => {
+        if (data.session) {
+          navigate('/dashboard');
+        }
+      }, 1000);
     }
 
     setLoading(false);
@@ -75,7 +83,7 @@ const Auth = () => {
     e.preventDefault();
     setLoading(true);
 
-    const { error } = await supabase.auth.signInWithPassword({
+    const { data, error } = await supabase.auth.signInWithPassword({
       email,
       password,
     });
@@ -86,6 +94,14 @@ const Auth = () => {
         description: error.message,
         variant: "destructive",
       });
+    } else if (data.session) {
+      toast({
+        title: "Login effettuato!",
+        description: "Benvenuto nella piattaforma",
+      });
+      
+      // Reindirizzo esplicito dopo login
+      navigate('/dashboard');
     }
 
     setLoading(false);
