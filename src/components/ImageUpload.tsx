@@ -33,11 +33,17 @@ const ImageUpload: React.FC<ImageUploadProps> = ({ onImagesUploaded, maxImages =
     const newImageUrls: string[] = [];
 
     try {
+      // Get current user ID
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) {
+        throw new Error('User not authenticated');
+      }
+
       for (let i = 0; i < files.length; i++) {
         const file = files[i];
         const fileExt = file.name.split('.').pop();
         const fileName = `${Math.random()}.${fileExt}`;
-        const filePath = `${Date.now()}-${fileName}`;
+        const filePath = `${user.id}/${Date.now()}-${fileName}`;
 
         const { data, error } = await supabase.storage
           .from('chat-images')
@@ -47,7 +53,7 @@ const ImageUpload: React.FC<ImageUploadProps> = ({ onImagesUploaded, maxImages =
           console.error('Upload error:', error);
           toast({
             title: "Errore upload",
-            description: `Errore caricando ${file.name}`,
+            description: `Errore caricando ${file.name}: ${error.message}`,
             variant: "destructive",
           });
           continue;
