@@ -1,8 +1,15 @@
 import { Button } from "@/components/ui/button";
 import { Play } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 import heroMockup from "@/assets/hero-chat-mockup.jpg";
 
 const HeroSection = () => {
+  const navigate = useNavigate();
+
+  const handleTryFree = () => {
+    navigate("/auth");
+  };
+
   return (
     <section className="relative min-h-screen flex items-center justify-center px-4 py-20">
       {/* Background gradient overlay */}
@@ -25,7 +32,7 @@ const HeroSection = () => {
             </div>
             
             <div className="flex flex-col sm:flex-row gap-6 justify-center lg:justify-start fade-in-up-delayed">
-              <Button className="btn-hero text-lg">
+              <Button className="btn-hero text-lg" onClick={handleTryFree}>
                 Prova Gratis
               </Button>
               
