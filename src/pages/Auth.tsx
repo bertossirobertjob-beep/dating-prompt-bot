@@ -21,26 +21,32 @@ const Auth = () => {
   useEffect(() => {
     // Set up auth state listener FIRST
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
-      (event, session) => {
+      async (event, session) => {
+        console.log('Auth state changed:', event, session?.user?.id);
         setSession(session);
         setUser(session?.user ?? null);
         
         // Redirect authenticated users to dashboard
-        if (session?.user) {
+        if (session?.user && event !== 'SIGNED_OUT') {
+          console.log('Redirecting to dashboard...');
           navigate("/dashboard");
         }
       }
     );
 
     // THEN check for existing session
-    supabase.auth.getSession().then(({ data: { session } }) => {
+    const checkSession = async () => {
+      const { data: { session } } = await supabase.auth.getSession();
+      console.log('Initial session check:', session?.user?.id);
       setSession(session);
       setUser(session?.user ?? null);
       
       if (session?.user) {
         navigate("/dashboard");
       }
-    });
+    };
+    
+    checkSession();
 
     return () => subscription.unsubscribe();
   }, [navigate]);
@@ -49,31 +55,38 @@ const Auth = () => {
     e.preventDefault();
     setLoading(true);
 
-    const { data, error } = await supabase.auth.signUp({
-      email,
-      password,
-    });
+    try {
+      const { data, error } = await supabase.auth.signUp({
+        email,
+        password,
+      });
 
-    if (error) {
+      if (error) {
+        toast({
+          title: "Errore nella registrazione",
+          description: error.message,
+          variant: "destructive",
+        });
+      } else if (data.user && data.session) {
+        console.log('Signup successful:', data.user.id);
+        toast({
+          title: "Registrazione completata!",
+          description: "Benvenuto nella piattaforma",
+        });
+        
+        // Force immediate redirect
+        setTimeout(() => {
+          console.log('Forcing redirect to dashboard');
+          navigate('/dashboard');
+        }, 500);
+      }
+    } catch (error) {
+      console.error('Signup error:', error);
       toast({
         title: "Errore nella registrazione",
-        description: error.message,
+        description: "Si è verificato un errore imprevisto",
         variant: "destructive",
       });
-    } else if (data.user) {
-      // Se l'utente è stato creato, significa che è già autenticato
-      toast({
-        title: "Registrazione completata!",
-        description: "Benvenuto nella piattaforma",
-      });
-      
-      // Il redirect avverrà automaticamente tramite onAuthStateChange
-      // Ma aggiungiamo un timeout di sicurezza
-      setTimeout(() => {
-        if (data.session) {
-          navigate('/dashboard');
-        }
-      }, 1000);
     }
 
     setLoading(false);
