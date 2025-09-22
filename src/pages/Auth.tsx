@@ -49,14 +49,9 @@ const Auth = () => {
     e.preventDefault();
     setLoading(true);
 
-    const redirectUrl = `${window.location.origin}/`;
-
-    const { error } = await supabase.auth.signUp({
+    const { data, error } = await supabase.auth.signUp({
       email,
       password,
-      options: {
-        emailRedirectTo: redirectUrl
-      }
     });
 
     if (error) {
@@ -68,8 +63,9 @@ const Auth = () => {
     } else {
       toast({
         title: "Registrazione completata!",
-        description: "Controlla la tua email per verificare l'account.",
+        description: "Benvenuto nella piattaforma",
       });
+      // L'utente sarà automaticamente autenticato e reindirizzato
     }
 
     setLoading(false);
