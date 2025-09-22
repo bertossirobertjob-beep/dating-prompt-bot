@@ -23,6 +23,7 @@ interface Message {
   content: string;
   role: 'user' | 'assistant';
   created_at: string;
+  images?: string[];
 }
 
 const Chat = () => {
@@ -90,14 +91,18 @@ const Chat = () => {
 
     const { data, error } = await supabase
       .from('messages')
-      .select('*')
+      .select(`
+        *,
+        message_images(image_url)
+      `)
       .eq('chat_id', chatId)
       .order('created_at', { ascending: true });
 
     if (data) {
       const typedMessages = data.map(msg => ({
         ...msg,
-        role: msg.role as 'user' | 'assistant'
+        role: msg.role as 'user' | 'assistant',
+        images: msg.message_images?.map((img: any) => img.image_url) || []
       }));
       setMessages(typedMessages);
     }
@@ -286,6 +291,21 @@ const Chat = () => {
                     </span>
                   </div>
                   <p className="whitespace-pre-wrap">{message.content}</p>
+                  
+                  {/* Visualizza le immagini del messaggio */}
+                  {message.images && message.images.length > 0 && (
+                    <div className="grid grid-cols-2 gap-2 mt-3">
+                      {message.images.map((imageUrl, imgIndex) => (
+                        <img
+                          key={imgIndex}
+                          src={imageUrl}
+                          alt={`Immagine ${imgIndex + 1}`}
+                          className="rounded-md max-w-full h-auto cursor-pointer hover:opacity-80"
+                          onClick={() => window.open(imageUrl, '_blank')}
+                        />
+                      ))}
+                    </div>
+                  )}
                 </div>
               </div>
             ))
